@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkoolOfCode – Your Child's Coding Journey</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.4/babel.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #1e293b; overflow-x: hidden; }
+  a { cursor: pointer; }
+  button { cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState } = React;
+
+const SQ_LOGO = "https://skoolofcode.mo.cloudinary.net/skc_logo_sq.png";
+const ENROLL_URL = "https://skoolofcode.us/get-started?step=student&child=0";
+const SHOWCASE_URL = "https://skoolofcode.us/student-showcase";
+const PROFILE_URL = "https://skoolofcode.us/public/students/neha.date";
+const KENSPARK_URL = "https://www.kenspark.com/";
+const PRICING_URL = "https://skoolofcode.us/pricing-new";
+
+function Logo({ height = 40, dark = false }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <img
+        src={SQ_LOGO}
+        alt="SkoolOfCode"
+        style={{ height, objectFit: "contain" }}
+        onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+      />
+      <div style={{ display: "none", alignItems: "center", gap: 8 }}>
+        <div style={{ width: height, height: height, borderRadius: height * 0.22, background: "linear-gradient(135deg, #7C3AED, #2563eb)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: height * 0.48, flexShrink: 0 }}>💻</div>
+        <span style={{ fontWeight: 900, fontSize: height * 0.52, background: dark ? "none" : "linear-gradient(135deg, #7C3AED, #2563eb)", WebkitBackgroundClip: dark ? "unset" : "text", WebkitTextFillColor: dark ? "#fff" : "transparent", color: dark ? "#fff" : undefined }}>SkoolOfCode</span>
+      </div>
+    </div>
+  );
+}
+
+const testimonials = [
+  { name: "Jennifer Turner", img: "https://skoolofcode.mo.cloudinary.net/parentone.png", text: "SkoolOfCode has been a great outlet for my son Jack to exercise and grow his creativity. We loved it so much, we enrolled his brother Thomas too!" },
+  { name: "Gaurav Seth", img: "https://skoolofcode.mo.cloudinary.net/parent2.png", text: "Enrolling my son at SkoolOfCode was one of the best decisions I've taken for him! It's amazing to see him create innovative and fun coding projects." },
+  { name: "Preeti Arora", img: "https://skoolofcode.mo.cloudinary.net/parent4.png", text: "Vivaan is absolutely loving his classes. Seeing him grow and show us his mini projects after class brings so much joy. He's always curious about what's next!" },
+];
+
+const stats = [
+  { value: "7+", label: "Years of Excellence" },
+  { value: "1000+", label: "Students Taught" },
+  { value: "5.0★", label: "Google & Facebook" },
+  { value: "K–12", label: "All Grade Levels" },
+];
+
+const nehaModules = [
+  "Intro to Scratch","Basic Gaming with Scratch","Science Models with Code",
+  "Pro Gaming","Game Controls (Makey Makey)","Intro to Robotics with MakeCode",
+  "Advanced IoT/Robotics","Game Controls (AI and ML)","Intro to 3D Game Dev on Roblox",
+  "EduBlocks (Python)","Introduction to Python","Gaming with Python",
+  "Data Structures & Adv. Tech","Data Analysis & Machine Learning"
+];
+
+const plans = [
+  {
+    name: "Group Classes", tag: null, tagColor: null, price: "$119",
+    subtext: "per month · Monthly subscription · Groups of 3",
+    color: "#7C3AED", bg: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "#a78bfa",
+    features: ["Live online group classes (3 students)","Fixed weekly schedule — classes run at the same time every week","Can be taken by any of our expert CS educators","If your child misses a class, the recording is available for 1 week","Teacher may vary across sessions","Access to KenSpark AI platform","Student profile & portfolio","Student showcase feature","Certificate after every module (~3 months)"],
+  },
+  {
+    name: "Private 1-on-1", tag: "Personalized", tagColor: "#0369a1", price: "$150",
+    subtext: "per month · Monthly subscription · Private classes",
+    color: "#0369a1", bg: "linear-gradient(135deg, #f0f9ff, #e0f2fe)", border: "#7dd3fc",
+    features: ["Dedicated personal instructor","Fully customized pace & schedule","Access to KenSpark AI platform","Student profile & portfolio","Class recordings for 1 week","Student showcase feature","Certificate after every module (~3 months)"],
+  },
+];
+
+const curriculumData = [
+  {
+    grade: "Grades 1–2", label: "G1–2", color: "#e11d48",
+    bg: "linear-gradient(135deg, #fff1f2, #ffe4e6)", border: "#fda4af",
+    tagline: "Art, Storytelling & Gaming",
+    desc: "Young learners start their coding journey through creative digital art, storytelling, and game design using Scratch.",
+    icon: "🎨",
+    modules: [
+      { num: 1, code: "12-1", name: "Octa Studio", desc: "Introduction to digital creativity and visual design" },
+      { num: 2, code: "12-2", name: "Story Boards", desc: "Digital storytelling with animations and narratives" },
+      { num: 3, code: "12-3", name: "Basic Gaming with Scratch", desc: "Build simple games using block-based coding" },
+    ],
+    skills: ["Scratch", "Digital Art", "Storytelling", "Block Coding", "Game Design"],
+    url: "https://skoolofcode.us/curriculum/grade1-2",
+  },
+  {
+    grade: "Grades 3–4", label: "G3–4", color: "#d97706",
+    bg: "linear-gradient(135deg, #fffbeb, #fef3c7)", border: "#fcd34d",
+    tagline: "Gaming, Robotics & AI",
+    desc: "Kids advance into pro gaming with Scratch, physical computing with Makey Makey & Microbit, and an introduction to AI & ML concepts.",
+    icon: "🤖",
+    modules: [
+      { num: 4, code: "34-3", name: "Pro Gaming", desc: "Advanced game design and mechanics with Scratch" },
+      { num: 5, code: "34-4", name: "Makey Makey", desc: "Physical computing with Makey Makey controllers" },
+      { num: 6, code: "34-5", name: "Intro to Microbit", desc: "Hands-on robotics with MakeCode & Microbit" },
+      { num: 7, code: "34-6", name: "AI & ML", desc: "Introduction to AI and machine learning concepts" },
+    ],
+    skills: ["Scratch Advanced", "Makey Makey", "Microbit", "AI & ML Basics", "Robotics"],
+    url: "https://skoolofcode.us/curriculum/grade3-4",
+  },
+  {
+    grade: "Grades 5–6", label: "G5–6", color: "#7C3AED",
+    bg: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "#c4b5fd",
+    tagline: "Advanced Gaming, Apps & Hardware",
+    desc: "Students level up with advanced gaming, mobile app development, advanced robotics with Microbit, and real hardware programming with Arduino.",
+    icon: "📱",
+    modules: [
+      { num: 8, code: "56-3", name: "Advanced Gaming", desc: "Next-level game development concepts" },
+      { num: 9, code: "56-4", name: "Mobile App (Gaming)", desc: "Build gaming apps for mobile devices" },
+      { num: 10, code: "56-5", name: "Mobile App (Utility)", desc: "Build practical utility apps for mobile" },
+      { num: 11, code: "56-6", name: "Advanced Microbit", desc: "Advanced IoT and robotics with Microbit" },
+      { num: 12, code: "56-7", name: "Arduino", desc: "Introduction to Arduino hardware programming" },
+      { num: 13, code: "56-8", name: "Advanced Arduino", desc: "Advanced Arduino projects and circuits" },
+    ],
+    skills: ["Mobile Apps", "Arduino", "Microbit", "IoT", "Advanced Gaming"],
+    url: "https://skoolofcode.us/curriculum",
+  },
+  {
+    grade: "Grades 7–9", label: "G7–9", color: "#0369a1",
+    bg: "linear-gradient(135deg, #f0f9ff, #e0f2fe)", border: "#7dd3fc",
+    tagline: "Python, Web Dev & Data Science",
+    desc: "Real programming with Python — from basics to OOP. Web development with HTML/JS, data structures, and machine learning.",
+    icon: "💻",
+    modules: [
+      { num: 14, code: "G79-1", name: "Static & AI-Enhanced Web Pages", desc: "Build static websites enhanced with AI features" },
+      { num: 15, code: "G79-2", name: "Dynamic Web Pages", desc: "JavaScript and HTML for interactive webpages" },
+      { num: 16, code: "G79-3", name: "Introduction to Python", desc: "Core Python programming fundamentals" },
+      { num: 17, code: "G79-4", name: "Gaming with Python", desc: "Build real games using Python" },
+      { num: 18, code: "G79-5", name: "Data Structures & Adv. Tech", desc: "Arrays, lists, functions and advanced techniques" },
+      { num: 19, code: "G79-6", name: "Data Analysis & Machine Learning", desc: "Intro to ML and data science with Python" },
+      { num: 20, code: "G79-7", name: "OOP with Python", desc: "Object-Oriented Programming concepts in Python" },
+    ],
+    skills: ["Python", "JavaScript", "HTML/CSS", "Data Structures", "Machine Learning", "OOP"],
+    url: "https://skoolofcode.us/curriculum/grade7-9",
+  },
+  {
+    grade: "Grades 10–12", label: "G10–12", color: "#0f766e",
+    bg: "linear-gradient(135deg, #f0fdfa, #ccfbf1)", border: "#6ee7b7",
+    tagline: "Java, Advanced Python & AP CS",
+    desc: "Advanced programming with Java and Python. AP Computer Science A exam preparation for college-ready students.",
+    icon: "🎓",
+    modules: [
+      { num: 21, code: "G1012-8", name: "Introduction to Java", desc: "Core Java programming and syntax" },
+      { num: 22, code: "G1012-9", name: "Advanced Java", desc: "Advanced Java with OOP and design patterns" },
+      { num: 23, code: "G1012-10", name: "APCS A Prep", desc: "Structured preparation for AP Computer Science A exam" },
+    ],
+    skills: ["Java", "Advanced Python", "OOP", "AP CS A", "Software Dev"],
+    url: "https://skoolofcode.us/curriculum/grade10-12",
+  },
+];
+
+function Stars() {
+  return <span style={{ color: "#f59e0b", fontSize: 14 }}>★★★★★</span>;
+}
+
+function CurriculumTabs() {
+  const [active, setActive] = useState(0);
+  const g = curriculumData[active];
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 28, flexWrap: "wrap", justifyContent: "center" }}>
+        {curriculumData.map((c, i) => (
+          <button key={i} onClick={() => setActive(i)}
+            style={{ padding: "9px 20px", borderRadius: 50, fontWeight: 700, fontSize: 14, border: "2px solid",
+              background: active === i ? `linear-gradient(135deg, ${c.color}, ${c.color}cc)` : "#fff",
+              color: active === i ? "#fff" : "#64748b",
+              borderColor: active === i ? "transparent" : "#e2e8f0", transition: "all 0.2s" }}>
+            {c.label}
+          </button>
+        ))}
+      </div>
+      <div style={{ background: g.bg, borderRadius: 24, border: `2px solid ${g.border}`, overflow: "hidden" }}>
+        <div style={{ padding: "28px 32px", borderBottom: `1px solid ${g.border}` }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", flexShrink: 0 }}>{g.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 4 }}>
+                <h3 style={{ fontSize: 22, fontWeight: 900, color: g.color, margin: 0 }}>{g.grade}</h3>
+                <span style={{ background: g.color, color: "#fff", fontSize: 11, fontWeight: 800, padding: "3px 12px", borderRadius: 50 }}>{g.tagline}</span>
+              </div>
+              <p style={{ color: "#475569", fontSize: 14.5, lineHeight: 1.7, margin: 0 }}>{g.desc}</p>
+            </div>
+            <a href={g.url} target="_blank" rel="noreferrer"
+              style={{ background: g.color, color: "#fff", padding: "9px 20px", borderRadius: 50, fontSize: 13, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+              View Details →
+            </a>
+          </div>
+        </div>
+        <div style={{ padding: "24px 32px" }}>
+          <div style={{ fontWeight: 800, fontSize: 13, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 16 }}>Modules in this track (~3 months each · Certificate on completion)</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 12, marginBottom: 24 }}>
+            {g.modules.map((m, i) => (
+              <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "16px 18px", border: `1px solid ${g.border}`, display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: g.bg, border: `1px solid ${g.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 900, color: g.color, flexShrink: 0 }}>{m.num}</div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3, flexWrap: "wrap" }}>
+                    <div style={{ fontWeight: 800, fontSize: 14, color: "#1e293b" }}>{m.name}</div>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: g.color, background: g.bg, border: `1px solid ${g.border}`, borderRadius: 50, padding: "1px 8px" }}>{m.code}</span>
+                  </div>
+                  <div style={{ fontSize: 12.5, color: "#64748b", lineHeight: 1.5 }}>{m.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 12, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Skills Gained</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {g.skills.map((s, i) => (
+                <span key={i} style={{ background: "#fff", border: `1.5px solid ${g.border}`, color: g.color, fontSize: 12, fontWeight: 700, padding: "4px 14px", borderRadius: 50 }}>{s}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [activeCard, setActiveCard] = useState(null);
+  const [activeTab, setActiveTab] = useState("practical");
+
+  return (
+    <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f8fafc", color: "#1e293b", overflowX: "hidden" }}>
+
+      {/* NAV */}
+      <nav style={{ background: "#fff", padding: "14px 32px", display: "flex", alignItems: "center", boxShadow: "0 1px 8px rgba(0,0,0,0.08)", position: "sticky", top: 0, zIndex: 100 }}>
+        <Logo height={56} />
+      </nav>
+
+      {/* HERO */}
+      <section style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a5f 100%)", color: "#fff", padding: "72px 32px 80px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -80, left: "10%", width: 400, height: 400, borderRadius: "50%", background: "rgba(124,58,237,0.18)", filter: "blur(80px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -80, right: "5%", width: 350, height: 350, borderRadius: "50%", background: "rgba(37,99,235,0.18)", filter: "blur(80px)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 680, margin: "0 auto" }}>
+          <div style={{ display: "inline-block", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 50, padding: "6px 20px", fontSize: 13, fontWeight: 600, color: "#c7d2fe", marginBottom: 24 }}>
+            🎉 Thank you for attending your trial class!
+          </div>
+          <h1 style={{ fontSize: "clamp(30px, 5.5vw, 52px)", fontWeight: 900, lineHeight: 1.18, margin: "0 0 18px" }}>
+            Your Child's Coding Journey<br />
+            <span style={{ background: "linear-gradient(90deg, #a78bfa, #60a5fa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Starts Here</span>
+          </h1>
+          <p style={{ fontSize: 17, color: "rgba(255,255,255,0.78)", lineHeight: 1.75, maxWidth: 560, margin: "0 auto" }}>
+            At SkoolOfCode, kids don't just learn to code — they build real projects, earn their own profile, grow with AI, and become confident creators.
+          </p>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section style={{ background: "#fff", padding: "44px 32px" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 20, textAlign: "center" }}>
+          {stats.map((s, i) => (
+            <div key={i} style={{ padding: "24px 16px", borderRadius: 16, background: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "1px solid #ddd6fe" }}>
+              <div style={{ fontSize: 30, fontWeight: 900, color: "#7C3AED", lineHeight: 1 }}>{s.value}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#64748b", marginTop: 6 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PLATFORM SHOWCASE — TABBED */}
+      <section style={{ padding: "72px 32px", background: "#f8fafc" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, marginBottom: 10 }}>See What Your Child Gets</h2>
+            <p style={{ color: "#64748b", fontSize: 16 }}>Real features. Real student work. Click to explore.</p>
+          </div>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 36, flexWrap: "wrap" }}>
+            {[
+              { id: "practical", label: "🛠️ Practical Learning" },
+              { id: "classroom", label: "🖥️ Interactive Classroom" },
+              { id: "showcase", label: "🌐 Student Showcase" },
+              { id: "profile", label: "👤 Profile Page" },
+              { id: "kenspark", label: "🤖 KenSpark AI" },
+              { id: "recordings", label: "🎬 Class Recordings" },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                style={{ padding: "10px 22px", borderRadius: 50, fontWeight: 700, fontSize: 14, border: "2px solid",
+                  background: activeTab === tab.id ? "linear-gradient(135deg, #7C3AED, #2563eb)" : "#fff",
+                  color: activeTab === tab.id ? "#fff" : "#64748b",
+                  borderColor: activeTab === tab.id ? "transparent" : "#e2e8f0", transition: "all 0.2s" }}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {activeTab === "practical" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #b45309, #d97706)", padding: "20px 28px" }}>
+                <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>🛠️ Practical, Project-Based Learning</div>
+                <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>Real projects. Real skills. Real confidence.</div>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.75, marginBottom: 28 }}>
+                  At SkoolOfCode, kids don't just watch — they <strong>build</strong>. Every class revolves around hands-on projects that go from concept to completion. By the end of each module, your child has something real to show for it.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 16 }}>
+                  {[
+                    { icon: "🎮", title: "Build Real Projects", desc: "Games, websites, animations and apps — not just exercises on a screen" },
+                    { icon: "🧠", title: "Learn by Doing", desc: "Concepts are taught through coding challenges and building, not passive watching" },
+                    { icon: "🔁", title: "Iterative Improvement", desc: "Kids revisit and improve their projects, learning how real developers work" },
+                    { icon: "🏁", title: "Presentation Day", desc: "Each module ends with a Presentation Day where students present their projects — building confidence and communication skills" },
+                    { icon: "📁", title: "Portfolio Ready", desc: "Every project is saved to the student's profile — building a portfolio they can be proud of over time" },
+                    { icon: "🌍", title: "Real-World Skills", desc: "From Python to robotics, all skills taught are relevant and future-ready" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ background: "linear-gradient(135deg, #fffbeb, #fef3c7)", borderRadius: 14, padding: "20px 18px", border: "1px solid #fcd34d" }}>
+                      <div style={{ fontSize: 26, marginBottom: 8 }}>{item.icon}</div>
+                      <div style={{ fontWeight: 800, fontSize: 14, color: "#b45309", marginBottom: 5 }}>{item.title}</div>
+                      <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>{item.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "classroom" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #7C3AED, #4f46e5)", padding: "20px 28px" }}>
+                <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>🖥️ Interactive Classroom Experience</div>
+                <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>Live, engaging, and designed for young learners</div>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", fontSize: 15, lineHeight: 1.75, marginBottom: 28 }}>
+                  Our online classrooms are anything but passive. With expert CS educators guiding every session, kids stay engaged, ask questions freely, and learn in a <strong>small group or private setting</strong> designed for maximum interaction.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 16, marginBottom: 28 }}>
+                  {[
+                    { icon: "👩‍💻", title: "Expert CS Educators", desc: "Passionate computer science educators who genuinely love teaching kids" },
+                    { icon: "👥", title: "Small Batch Sizes", desc: "Groups of just 3 students — so every child gets personal attention" },
+                    { icon: "🙋", title: "Ask Anything", desc: "Kids are encouraged to ask questions freely in a safe, fun environment" },
+                    { icon: "⚡", title: "Live & Interactive", desc: "Real-time coding together, not recorded lectures — fully live every session" },
+                    { icon: "🎯", title: "Structured Yet Fun", desc: "Every class has a clear goal but is delivered in an engaging, enjoyable way" },
+                    { icon: "🌐", title: "Learn from Anywhere", desc: "100% online — accessible from home, anywhere in the world" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ background: "linear-gradient(135deg, #f5f3ff, #ede9fe)", borderRadius: 14, padding: "20px 18px", border: "1px solid #ddd6fe" }}>
+                      <div style={{ fontSize: 26, marginBottom: 8 }}>{item.icon}</div>
+                      <div style={{ fontWeight: 800, fontSize: 14, color: "#7C3AED", marginBottom: 5 }}>{item.title}</div>
+                      <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>{item.desc}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "linear-gradient(135deg, #1e1b4b, #312e81)", borderRadius: 16, padding: "24px 28px", color: "#fff", display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "space-around", textAlign: "center" }}>
+                  {[
+                    { value: "3", label: "Max Students\nper Group" },
+                    { value: "60", label: "Minutes\nper Class" },
+                    { value: "Live", label: "Every Session\nIs Live" },
+                    { value: "100%", label: "Online &\nFlexible" },
+                  ].map((s, i) => (
+                    <div key={i}>
+                      <div style={{ fontSize: 26, fontWeight: 900, color: "#a78bfa" }}>{s.value}</div>
+                      <div style={{ fontSize: 12, opacity: 0.7, whiteSpace: "pre-line", marginTop: 4 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "showcase" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #7C3AED, #2563eb)", padding: "20px 28px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>🌐 Student Showcase</div>
+                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>skoolofcode.us/student-showcase</div>
+                </div>
+                <a href={SHOWCASE_URL} target="_blank" rel="noreferrer"
+                  style={{ background: "rgba(255,255,255,0.2)", color: "#fff", padding: "8px 18px", borderRadius: 50, fontSize: 13, fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.35)" }}>
+                  Visit Live →
+                </a>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", marginBottom: 24, fontSize: 15, lineHeight: 1.7 }}>
+                  Every project your child builds gets featured on our public showcase. It's a real portfolio they can share with friends and family — and a huge confidence booster.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+                  {[
+                    { title: "All About Shapes", level: "Intermediate", student: "Neha", course: "Science Models with Code", thumb: "https://skoolofcode.s3.amazonaws.com/prod_skool/studentshowcase_files/thumbnail/Neha/859_60_Neha_Thumbnail.PNG?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWL3TZKNIVRRFGM5T%2F20260226%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260226T074239Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d18201c94afa9db813e7720acdea718e881669d07d132bf179d78c9278599613" },
+                    { title: "Smile Time", level: "Beginner", student: "Neha", course: "EduBlocks (Python)", thumb: "https://skoolofcode.s3.amazonaws.com/prod_skool/studentshowcase_files/thumbnail/Neha/517_113_TH-_Neha.PNG?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWL3TZKNIVRRFGM5T%2F20260226%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260226T074239Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f518f89ada22861a963871cac07fefa1c95df79795c53dcb0f1c4de9ed1c31d1" },
+                    { title: "Your Child's Project", level: "Coming Soon", student: "Your Child", course: "Next module", thumb: null },
+                  ].map((p, i) => (
+                    <div key={i} style={{ borderRadius: 14, overflow: "hidden", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+                      <div style={{ position: "relative", aspectRatio: "16/9", background: p.thumb ? "#000" : "linear-gradient(135deg, #ede9fe, #dbeafe)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {p.thumb ? (
+                          <>
+                            <img src={p.thumb} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(255,255,255,0.9)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>▶</div>
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ textAlign: "center", color: "#7C3AED" }}>
+                            <div style={{ fontSize: 32 }}>⭐</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, marginTop: 4 }}>Your child next!</div>
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ padding: "12px 14px" }}>
+                        <div style={{ display: "inline-block", background: p.level === "Intermediate" ? "#fef3c7" : p.level === "Beginner" ? "#dcfce7" : "#ede9fe", color: p.level === "Intermediate" ? "#92400e" : p.level === "Beginner" ? "#166534" : "#7C3AED", fontSize: 10, fontWeight: 700, borderRadius: 50, padding: "2px 10px", marginBottom: 6 }}>{p.level}</div>
+                        <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 2 }}>{p.title}</div>
+                        <div style={{ fontSize: 11, color: "#94a3b8" }}>by {p.student} · {p.course}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "profile" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #0369a1, #0891b2)", padding: "20px 28px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>👤 Student Profile Page</div>
+                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>skoolofcode.us/public/students/[your-child]</div>
+                </div>
+                <a href={PROFILE_URL} target="_blank" rel="noreferrer"
+                  style={{ background: "rgba(255,255,255,0.2)", color: "#fff", padding: "8px 18px", borderRadius: 50, fontSize: 13, fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.35)" }}>
+                  See Example →
+                </a>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", marginBottom: 24, fontSize: 15, lineHeight: 1.7 }}>
+                  Every student gets their own dedicated profile page — a living record of their coding journey. Here's a real example from one of our students, Neha, who has completed <strong>14 modules</strong> and published <strong>2 showcase projects</strong>.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                  <div style={{ background: "linear-gradient(135deg, #f0f9ff, #e0f2fe)", borderRadius: 16, padding: 24, border: "1px solid #bae6fd" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
+                      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #7C3AED, #2563eb)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, fontWeight: 900 }}>N</div>
+                      <div>
+                        <div style={{ fontWeight: 900, fontSize: 17 }}>Neha Date 🎓</div>
+                        <div style={{ color: "#0369a1", fontSize: 13, fontWeight: 600 }}>14 Modules Completed</div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <div style={{ flex: 1, background: "#fff", borderRadius: 12, padding: "14px", textAlign: "center", border: "1px solid #bae6fd" }}>
+                        <div style={{ fontSize: 24, fontWeight: 900, color: "#7C3AED" }}>2</div>
+                        <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Showcase Videos</div>
+                      </div>
+                      <div style={{ flex: 1, background: "#fff", borderRadius: 12, padding: "14px", textAlign: "center", border: "1px solid #bae6fd" }}>
+                        <div style={{ fontSize: 24, fontWeight: 900, color: "#0369a1" }}>14</div>
+                        <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Courses Done</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ background: "#f8fafc", borderRadius: 16, padding: "18px 20px", border: "1px solid #e2e8f0", maxHeight: 220, overflowY: "auto" }}>
+                    <div style={{ fontWeight: 800, fontSize: 13, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 12 }}>Courses Enrolled</div>
+                    {nehaModules.map((m, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderBottom: i < nehaModules.length - 1 ? "1px solid #f1f5f9" : "none" }}>
+                        <span style={{ color: "#22c55e", fontSize: 13 }}>✓</span>
+                        <span style={{ fontSize: 13, color: "#374151" }}>{m}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "kenspark" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #0f766e, #0369a1)", padding: "20px 28px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div>
+                  <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>🤖 KenSpark — AI-Powered Learning Platform</div>
+                  <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>kenspark.com · Empowering K-12 STEM Education</div>
+                </div>
+                <a href={KENSPARK_URL} target="_blank" rel="noreferrer"
+                  style={{ background: "rgba(255,255,255,0.2)", color: "#fff", padding: "8px 18px", borderRadius: 50, fontSize: 13, fontWeight: 700, textDecoration: "none", border: "1px solid rgba(255,255,255,0.35)" }}>
+                  Visit KenSpark →
+                </a>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", marginBottom: 28, fontSize: 15, lineHeight: 1.7 }}>
+                  KenSpark is our dedicated AI-powered platform that supercharges your child's learning between classes. It assigns personalized assessments, tracks progress, and adapts to each student's individual pace.
+                </p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16 }}>
+                  {[
+                    { icon: "🎯", title: "Personalized Assessments", desc: "AI tailors each quiz and exercise to your child's current skill level" },
+                    { icon: "📈", title: "Progress Tracking", desc: "Parents and teachers can see exactly how the child is improving" },
+                    { icon: "⚡", title: "Instant Feedback", desc: "Kids learn from mistakes in real-time, not days later" },
+                    { icon: "🏆", title: "Gamified Practice", desc: "Points and rewards keep kids motivated and coming back" },
+                    { icon: "🔁", title: "Practice Between Classes", desc: "Keeps the learning momentum alive every day" },
+                    { icon: "🧠", title: "K-12 STEM Focused", desc: "Designed specifically for school-age learners from Grade 1 to 12" },
+                  ].map((item, i) => (
+                    <div key={i} style={{ background: "linear-gradient(135deg, #f0fdfa, #ccfbf1)", borderRadius: 14, padding: "20px 18px", border: "1px solid #a7f3d0" }}>
+                      <div style={{ fontSize: 26, marginBottom: 8 }}>{item.icon}</div>
+                      <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 5, color: "#0f766e" }}>{item.title}</div>
+                      <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>{item.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "recordings" && (
+            <div style={{ background: "#fff", borderRadius: 24, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.10)", border: "1px solid #e2e8f0" }}>
+              <div style={{ background: "linear-gradient(135deg, #b45309, #d97706)", padding: "20px 28px" }}>
+                <div style={{ color: "#fff", fontWeight: 800, fontSize: 17 }}>🎬 Class Recordings Dashboard</div>
+                <div style={{ color: "rgba(255,255,255,0.75)", fontSize: 13 }}>Available on Student Dashboard · 1 week access</div>
+              </div>
+              <div style={{ padding: 28 }}>
+                <p style={{ color: "#475569", marginBottom: 24, fontSize: 15, lineHeight: 1.7 }}>
+                  Every class is recorded and available on your child's dashboard for a full week. Missed a concept? Want to revisit something exciting? It's all there — on demand.
+                </p>
+                <div style={{ background: "#1e1b4b", borderRadius: 16, padding: 24, color: "#fff" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                    <span style={{ fontWeight: 900, fontSize: 15, color: "#a78bfa" }}>💻 SkoolOfCode</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, opacity: 0.8 }}>Student Dashboard</span>
+                  </div>
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 14 }}>Recent Class Recordings</div>
+                  {[
+                    { title: "Introduction to Python Variables", date: "Today", duration: "60 min", badge: "New" },
+                    { title: "Build Your First Game with Scratch", date: "3 days ago", duration: "60 min", badge: null },
+                    { title: "Loops & Conditions in Python", date: "5 days ago", duration: "60 min", badge: null },
+                  ].map((rec, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: "rgba(255,255,255,0.08)", borderRadius: 12, marginBottom: 10, border: "1px solid rgba(255,255,255,0.1)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(124,58,237,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>▶</div>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 14 }}>{rec.title}</div>
+                          <div style={{ fontSize: 12, opacity: 0.6 }}>{rec.date} · {rec.duration}</div>
+                        </div>
+                      </div>
+                      {rec.badge && <div style={{ background: "#7C3AED", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 10px", borderRadius: 50 }}>{rec.badge}</div>}
+                    </div>
+                  ))}
+                  <div style={{ textAlign: "center", marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Recordings available for 7 days after class</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* COMMUNICATION */}
+      <section style={{ padding: "72px 32px", background: "#fff" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, marginBottom: 10 }}>We Keep You in the Loop — Always</h2>
+            <p style={{ color: "#64748b", fontSize: 16, maxWidth: 520, margin: "0 auto" }}>Transparent communication, flexible scheduling, and post-class follow-ups so you're never out of the loop.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 22 }}>
+            {[
+              { bg: "linear-gradient(135deg, #fdf4ff, #fae8ff)", border: "#e9d5ff", iconBg: "#9333ea", icon: "🧑‍🏫", color: "#7e22ce", title: "Parent–Teacher Discussion", desc: "After every module (~3 months), we schedule a dedicated parent–teacher discussion to review your child's progress, celebrate wins, and plan the path ahead together." },
+              { bg: "linear-gradient(135deg, #fff7ed, #ffedd5)", border: "#fed7aa", iconBg: "#ea580c", icon: "💬", color: "#c2410c", title: "We Welcome Your Feedback", desc: "Your feedback matters to us. We are always open to suggestions on how to improve your child's learning experience — and we act on what you share." },
+              { bg: "linear-gradient(135deg, #f0fdf4, #dcfce7)", border: "#86efac", iconBg: "#25D366", icon: "💬", color: "#15803d", title: "WhatsApp Group", desc: "You're added to a dedicated WhatsApp group for your child's class — a direct line to teachers and coordinators for transparent, real-time communication." },
+              { bg: "linear-gradient(135deg, #fffbeb, #fef3c7)", border: "#fcd34d", iconBg: "#f59e0b", icon: "🔔", color: "#b45309", title: "Class Reminders", desc: "A reminder is sent to the WhatsApp group before every class — so your child is always prepared and ready to learn on time." },
+              { bg: "linear-gradient(135deg, #f0f9ff, #e0f2fe)", border: "#7dd3fc", iconBg: "#0369a1", icon: "📋", color: "#0369a1", title: "Post-Class Notes", desc: "After every class, detailed notes covering what was taught — along with the home task — are posted on the student dashboard and emailed directly to you as a parent." },
+              { bg: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "#c4b5fd", iconBg: "#7C3AED", icon: "📅", color: "#7C3AED", title: "Flexible Rescheduling", desc: "1-on-1: Inform us at least 12 hours in advance via WhatsApp. Group classes: Rescheduled only if all students agree — otherwise the class recording is always available." },
+            ].map((card, i) => (
+              <div key={i} style={{ background: card.bg, borderRadius: 20, padding: "30px 26px", border: `2px solid ${card.border}` }}>
+                <div style={{ width: 52, height: 52, borderRadius: 14, background: card.iconBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, marginBottom: 16 }}>{card.icon}</div>
+                <h3 style={{ fontWeight: 900, fontSize: 18, color: card.color, marginBottom: 8 }}>{card.title}</h3>
+                <p style={{ color: "#475569", fontSize: 14.5, lineHeight: 1.75, margin: 0 }}>{card.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 40, background: "linear-gradient(135deg, #1e1b4b, #312e81)", borderRadius: 20, padding: "32px 36px", color: "#fff" }}>
+            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 24, opacity: 0.9 }}>📆 What Happens Around Every Class</div>
+            <div style={{ display: "flex", gap: 0, flexWrap: "wrap", position: "relative" }}>
+              {[
+                { icon: "🔔", time: "Before Class", desc: "Reminder sent on WhatsApp group" },
+                { icon: "💻", time: "During Class", desc: "Live interactive session with expert instructor" },
+                { icon: "🎬", time: "After Class", desc: "Recording available on dashboard for 7 days" },
+                { icon: "📧", time: "Post Class Email", desc: "Class notes + home task sent to parent email" },
+              ].map((step, i, arr) => (
+                <div key={i} style={{ flex: 1, minWidth: 140, position: "relative", paddingRight: i < arr.length - 1 ? 16 : 0 }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                    <div style={{ width: 50, height: 50, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: 10, zIndex: 1 }}>{step.icon}</div>
+                    {i < arr.length - 1 && <div style={{ position: "absolute", top: 25, left: "calc(50% + 25px)", width: "calc(100% - 50px)", height: 2, background: "rgba(255,255,255,0.2)" }} />}
+                    <div style={{ fontWeight: 800, fontSize: 13, marginBottom: 4, color: "#c7d2fe" }}>{step.time}</div>
+                    <div style={{ fontSize: 12, opacity: 0.7, lineHeight: 1.5 }}>{step.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CERTIFICATES */}
+      <section style={{ padding: "72px 32px", background: "#f8fafc" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, marginBottom: 10 }}>Certificates That Celebrate Every Milestone</h2>
+            <p style={{ color: "#64748b", fontSize: 16, maxWidth: 520, margin: "0 auto" }}>Every module takes ~3 months to complete. At the end of each one, your child earns a certificate — a real achievement they can be proud of.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "center" }}>
+            <div style={{ background: "linear-gradient(135deg, #1e1b4b, #312e81)", borderRadius: 24, padding: "40px 36px", textAlign: "center", color: "#fff", boxShadow: "0 20px 60px rgba(124,58,237,0.3)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: -30, right: -30, width: 140, height: 140, borderRadius: "50%", background: "rgba(167,139,250,0.12)", pointerEvents: "none" }} />
+              <div style={{ position: "relative" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "#a78bfa", marginBottom: 20 }}>Certificate of Completion</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 6 }}>This is to certify that</div>
+                <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", marginBottom: 6 }}>Your Child's Name</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginBottom: 16 }}>has successfully completed</div>
+                <div style={{ background: "linear-gradient(135deg, #7C3AED, #2563eb)", borderRadius: 12, padding: "12px 20px", display: "inline-block", fontSize: 15, fontWeight: 800, marginBottom: 20 }}>Introduction to Python 🐍</div>
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 16, display: "flex", justifyContent: "space-between", fontSize: 11, color: "rgba(255,255,255,0.45)" }}>
+                  <span>Duration: ~3 months</span>
+                  <span>SkoolOfCode.us</span>
+                </div>
+                <div style={{ position: "absolute", top: 0, right: 0, fontSize: 32 }}>🏆</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {[
+                { icon: "📅", title: "~3 Months Per Module", desc: "Each module is a structured ~3 month journey covering a complete coding topic." },
+                { icon: "🏆", title: "Certificate on Completion", desc: "At the end of every module, your child receives an official SkoolOfCode certificate." },
+                { icon: "📈", title: "Build a Portfolio Over Time", desc: "As modules stack up, so does your child's profile — with certificates, projects, and skills." },
+                { icon: "🎓", title: "23 Modules Available", desc: "From beginner Scratch to advanced Java, APCS A, and Machine Learning." },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "1px solid #ddd6fe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{item.icon}</div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 3 }}>{item.title}</div>
+                    <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.65 }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CURRICULUM */}
+      <section style={{ padding: "72px 32px 80px", background: "#fff" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, marginBottom: 10 }}>Explore the Full Curriculum</h2>
+            <p style={{ color: "#64748b", fontSize: 16, maxWidth: 560, margin: "0 auto" }}>
+              Grade-appropriate modules with a step-up learning path — from fundamentals to advanced. Each module ends with a <strong>Presentation Day</strong> and a <strong>certificate</strong>!
+            </p>
+          </div>
+          <CurriculumTabs />
+          <div style={{ textAlign: "center", marginTop: 36 }}>
+            <a href="https://skoolofcode.us/curriculum" target="_blank" rel="noreferrer"
+              style={{ display: "inline-block", background: "linear-gradient(135deg, #7C3AED, #2563eb)", color: "#fff", padding: "14px 36px", borderRadius: 50, fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 6px 20px rgba(124,58,237,0.35)" }}>
+              View Full Curriculum →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" style={{ padding: "72px 32px", background: "#f8fafc" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 40px)", fontWeight: 900, marginBottom: 10 }}>Simple, Flexible Plans</h2>
+            <p style={{ color: "#64748b", fontSize: 16 }}>Choose the format that works best for your child.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
+            {plans.map((p, i) => (
+              <div key={i} style={{ background: p.bg, borderRadius: 22, padding: "36px 32px", border: `2px solid ${p.border}`, boxShadow: "0 6px 24px rgba(0,0,0,0.07)", position: "relative" }}>
+                {p.tag && <div style={{ position: "absolute", top: 20, right: 20, background: p.tagColor, color: "#fff", fontSize: 11, fontWeight: 800, padding: "4px 12px", borderRadius: 50 }}>{p.tag}</div>}
+                <h3 style={{ fontSize: 22, fontWeight: 900, color: p.color, marginBottom: 8 }}>{p.name}</h3>
+                <div style={{ fontSize: 36, fontWeight: 900, color: "#1e293b", marginBottom: 4 }}>{p.price}</div>
+                <div style={{ fontSize: 14, color: "#64748b", marginBottom: 28 }}>{p.subtext}</div>
+                <div style={{ marginBottom: 28 }}>
+                  {p.features.map((f, j) => (
+                    <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
+                      <span style={{ color: p.color, marginTop: 1, fontSize: 16, lineHeight: 1 }}>✓</span>
+                      <span style={{ fontSize: 14.5, color: "#374151" }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <a href={ENROLL_URL} target="_blank" rel="noreferrer"
+                  style={{ display: "block", textAlign: "center", background: `linear-gradient(135deg, ${p.color}, ${i === 0 ? "#2563eb" : "#0891b2"})`, color: "#fff", padding: "14px", borderRadius: 50, fontWeight: 800, fontSize: 15, textDecoration: "none" }}>
+                  Get Started →
+                </a>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 28, padding: "20px", background: "#fff", borderRadius: 16, border: "1px dashed #cbd5e1" }}>
+            <p style={{ color: "#475569", fontSize: 14, margin: 0 }}>
+              📞 <strong>Call:</strong> <a href="tel:+14253054645" style={{ color: "#7C3AED", fontWeight: 700 }}>+1 425 305 4645</a> &nbsp;|&nbsp; ✉️ <strong>Email:</strong> <a href="mailto:learn@skoolofcode.us" style={{ color: "#7C3AED", fontWeight: 700 }}>learn@skoolofcode.us</a> &nbsp;— for more info if needed
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ background: "linear-gradient(135deg, #1e1b4b, #1e3a5f)", padding: "90px 32px", textAlign: "center", color: "#fff" }}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ fontSize: 52, marginBottom: 16 }}>🚀</div>
+          <h2 style={{ fontSize: "clamp(26px, 4.5vw, 42px)", fontWeight: 900, marginBottom: 14, lineHeight: 1.25 }}>Ready to Continue the Journey?</h2>
+          <p style={{ color: "rgba(255,255,255,0.72)", fontSize: 16, marginBottom: 36, lineHeight: 1.75 }}>
+            Your child just had their first taste of coding. Let's build on that excitement — enroll today and watch them grow into a confident creator.
+          </p>
+          <a href={ENROLL_URL} target="_blank" rel="noreferrer"
+            style={{ display: "inline-block", background: "linear-gradient(135deg, #7C3AED, #2563eb)", color: "#fff", padding: "17px 46px", borderRadius: 50, fontWeight: 800, fontSize: 17, textDecoration: "none", boxShadow: "0 10px 28px rgba(124,58,237,0.5)" }}>
+            Enroll My Child Now →
+          </a>
+          <div style={{ marginTop: 28, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
+            <span>📞 +1 425 305 4645</span>
+            <span>✉️ learn@skoolofcode.us</span>
+            <span>🌐 skoolofcode.us</span>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{ background: "#0f0c29", padding: "32px 32px 24px", textAlign: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <Logo height={40} dark={true} />
+        </div>
+        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 12 }}>© PotkinPie LLC 2025. All rights reserved.</div>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
