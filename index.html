@@ -339,11 +339,10 @@ function App() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 16, marginBottom: 28 }}>
                   {[
                     { icon: "👩‍💻", title: "Expert CS Educators", desc: "Passionate computer science educators who genuinely love teaching kids" },
-                    { icon: "👥", title: "Small Batch Sizes", desc: "Groups of just 3 students — so every child gets personal attention" },
                     { icon: "🙋", title: "Ask Anything", desc: "Kids are encouraged to ask questions freely in a safe, fun environment" },
                     { icon: "⚡", title: "Live & Interactive", desc: "Real-time coding together, not recorded lectures — fully live every session" },
                     { icon: "🎯", title: "Structured Yet Fun", desc: "Every class has a clear goal but is delivered in an engaging, enjoyable way" },
-                    { icon: "🌐", title: "Learn from Anywhere", desc: "100% online — accessible from home, anywhere in the world" },
+                  
                   ].map((item, i) => (
                     <div key={i} style={{ background: "linear-gradient(135deg, #f5f3ff, #ede9fe)", borderRadius: 14, padding: "20px 18px", border: "1px solid #ddd6fe" }}>
                       <div style={{ fontSize: 26, marginBottom: 8 }}>{item.icon}</div>
@@ -383,7 +382,7 @@ function App() {
               </div>
               <div style={{ padding: 28 }}>
                 <p style={{ color: "#475569", marginBottom: 24, fontSize: 15, lineHeight: 1.7 }}>
-                  Every project your child builds gets featured on our public showcase. It's a real portfolio they can share with friends and family — and a huge confidence booster.
+                  Best project your child builds gets featured on our public showcase after getting concent from the parents. They can share with friends and family — and a huge confidence booster.
                 </p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
                   {[
@@ -440,7 +439,7 @@ function App() {
                     <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
                       <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #7C3AED, #2563eb)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, fontWeight: 900 }}>N</div>
                       <div>
-                        <div style={{ fontWeight: 900, fontSize: 17 }}>Neha Date 🎓</div>
+                        <div style={{ fontWeight: 900, fontSize: 17 }}>Neha🎓</div>
                         <div style={{ color: "#0369a1", fontSize: 13, fontWeight: 600 }}>14 Modules Completed</div>
                       </div>
                     </div>
@@ -619,7 +618,7 @@ function App() {
                 { icon: "📅", title: "~3 Months Per Module", desc: "Each module is a structured ~3 month journey covering a complete coding topic." },
                 { icon: "🏆", title: "Certificate on Completion", desc: "At the end of every module, your child receives an official SkoolOfCode certificate." },
                 { icon: "📈", title: "Build a Portfolio Over Time", desc: "As modules stack up, so does your child's profile — with certificates, projects, and skills." },
-                { icon: "🎓", title: "23 Modules Available", desc: "From beginner Scratch to advanced Java, APCS A, and Machine Learning." },
+               
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #f5f3ff, #ede9fe)", border: "1px solid #ddd6fe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{item.icon}</div>
@@ -675,10 +674,7 @@ function App() {
                     </div>
                   ))}
                 </div>
-                <a href={ENROLL_URL} target="_blank" rel="noreferrer"
-                  style={{ display: "block", textAlign: "center", background: `linear-gradient(135deg, ${p.color}, ${i === 0 ? "#2563eb" : "#0891b2"})`, color: "#fff", padding: "14px", borderRadius: 50, fontWeight: 800, fontSize: 15, textDecoration: "none" }}>
-                  Get Started →
-                </a>
+               
               </div>
             ))}
           </div>
@@ -698,10 +694,7 @@ function App() {
           <p style={{ color: "rgba(255,255,255,0.72)", fontSize: 16, marginBottom: 36, lineHeight: 1.75 }}>
             Your child just had their first taste of coding. Let's build on that excitement — enroll today and watch them grow into a confident creator.
           </p>
-          <a href={ENROLL_URL} target="_blank" rel="noreferrer"
-            style={{ display: "inline-block", background: "linear-gradient(135deg, #7C3AED, #2563eb)", color: "#fff", padding: "17px 46px", borderRadius: 50, fontWeight: 800, fontSize: 17, textDecoration: "none", boxShadow: "0 10px 28px rgba(124,58,237,0.5)" }}>
-            Enroll My Child Now →
-          </a>
+         
           <div style={{ marginTop: 28, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
             <span>📞 +1 425 305 4645</span>
             <span>✉️ learn@skoolofcode.us</span>
